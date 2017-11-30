@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.kichinaga.trademanager">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".CompaniesActivity"
+                  android:label="企業一覧"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".MarketsActivity"
+                  android:label="市場一覧"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".IndustriesActivity"
+                  android:label="業種一覧"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+    </application>
+
+</manifest>
