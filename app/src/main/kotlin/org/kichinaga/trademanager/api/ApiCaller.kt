@@ -15,6 +15,15 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * Created by kichinaga on 2017/10/12.
  */
 class ApiCaller<T: BaseConvertAdapter>(adapter: T) {
+
+    companion object {
+        fun getDefaultApiClient(): TradeManager =
+                Retrofit.Builder().client(OkHttpClient())
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addConverterFactory(MoshiConverterFactory.create())
+                        .baseUrl("http://${BuildConfig.OBJECT_SERVER_IP}:3000/api/v1/")
+                        .build().create(TradeManager::class.java)
+    }
     private val BASE_URL: String = "http://${BuildConfig.OBJECT_SERVER_IP}:3000/api/v1/"
 
     val client: TradeManager = getApiClient(adapter)
