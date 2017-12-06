@@ -40,12 +40,6 @@ class MainActivity : AppCompatActivity() {
             R.id.companies -> {
                 startActivity(Intent(this, CompaniesActivity::class.java))
             }
-            R.id.markets -> {
-                startActivity(Intent(this, MarketsActivity::class.java))
-            }
-            R.id.industries -> {
-                startActivity(Intent(this, IndustriesActivity::class.java))
-            }
         }
 
         return super.onOptionsItemSelected(item)
