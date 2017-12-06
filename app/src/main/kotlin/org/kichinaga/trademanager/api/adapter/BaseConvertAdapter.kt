@@ -1,33 +1,15 @@
-package org.kichinaga.trademanager.api
+package org.kichinaga.trademanager.api.adapter
 
-import com.squareup.moshi.*
+import com.squareup.moshi.JsonReader
 import io.realm.RealmList
 import org.kichinaga.trademanager.model.*
-import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Created by kichinaga on 2017/12/05.
+ * Created by kichinaga on 2017/12/06.
  */
-class AuthAdapter : JsonAdapter<Auth>() {
-
-    companion object {
-        val FACTORY: Factory = object : Factory {
-            override fun create(type: Type?, annotations: MutableSet<out Annotation>?, moshi: Moshi?): JsonAdapter<*>? {
-                if (type === Auth::class.java){
-                    return AuthAdapter()
-                }
-                return null
-            }
-        }
-    }
-
-    @FromJson
-    override fun fromJson(reader: JsonReader?): Auth? {
-        reader ?: throw JsonDataException("json parse error")
-        return readAuth(reader)
-    }
+interface BaseConvertAdapter {
 
     fun readAuth(reader: JsonReader): Auth {
         var token = ""
@@ -197,10 +179,5 @@ class AuthAdapter : JsonAdapter<Auth>() {
         reader.endObject()
 
         return StockTotal(price, amount, updated_at)
-    }
-
-    @ToJson
-    override fun toJson(writer: JsonWriter, value: Auth?) {
-        writer.value(value.toString())
     }
 }

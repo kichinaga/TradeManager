@@ -8,14 +8,17 @@ import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import com.squareup.moshi.JsonAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_login.*
 import org.kichinaga.trademanager.api.ApiCaller
+import org.kichinaga.trademanager.api.adapter.AuthAdapter
 import org.kichinaga.trademanager.extensions.isLoggedIn
 import org.kichinaga.trademanager.extensions.setAccessToken
 import org.kichinaga.trademanager.extensions.setUserId
+import org.kichinaga.trademanager.model.Auth
 
 /**
  * Created by kichinaga on 2017/12/05.
@@ -49,7 +52,7 @@ class LoginActivity: AppCompatActivity() {
         if (checkLoginData()){
             //todo 非同期でサーバにリクエストを送る
             showProgress(true)
-            val caller = ApiCaller()
+            val caller = ApiCaller(AuthAdapter())
 
             caller.client.login(login_email.text.toString(), login_password.text.toString())
                     .subscribeOn(Schedulers.newThread())

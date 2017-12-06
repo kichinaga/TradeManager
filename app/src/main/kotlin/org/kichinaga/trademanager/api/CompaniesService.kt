@@ -3,6 +3,7 @@ package org.kichinaga.trademanager.api
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import org.kichinaga.trademanager.api.adapter.CompanyAdapter
 import org.kichinaga.trademanager.model.Company
 
 /**
@@ -10,7 +11,7 @@ import org.kichinaga.trademanager.model.Company
  */
 class CompaniesService {
     private val companies: BehaviorSubject<List<Company>> = BehaviorSubject.create()
-    private val caller: ApiCaller = ApiCaller()
+    private val caller = ApiCaller(CompanyAdapter())
 
     fun get(): Observable<List<Company>> {
         val list = companies.value
