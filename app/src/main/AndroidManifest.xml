@@ -29,13 +29,8 @@
                   android:label="企業一覧"
                   android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".MarketsActivity"
-                  android:label="市場一覧"
-                  android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".IndustriesActivity"
-                  android:label="業種一覧"
-                  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".SignUpActivity"
+            android:label="@string/signup"/>
     </application>
 
 </manifest>

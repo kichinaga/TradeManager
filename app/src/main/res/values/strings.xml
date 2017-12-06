@@ -10,7 +10,13 @@
     <string name="password">Password</string>
     <string name="login">ログイン</string>
     <string name="register_user"><u>アカウントを新しく作成する</u></string>
-    <string name="error_login_field">Eメールまたは、パスワードが間違っています。</string>
+    <string name="error_form_field">入力した値が正しくありません。</string>
     <string name="success_login">ログインしました。</string>
     <string name="error_login">ログインに失敗しました。</string>
+
+    <string name="name">Name</string>
+    <string name="signup">新規登録</string>
+    <string name="success_signup">登録が完了しました</string>
+    <string name="error_signup">登録できませんでした。</string>
+    <string name="password_confirmation">Password Confirmation</string>
 </resources>
