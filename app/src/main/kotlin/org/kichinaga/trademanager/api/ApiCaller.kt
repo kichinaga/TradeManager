@@ -1,5 +1,6 @@
 package org.kichinaga.trademanager.api
 
+import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import org.kichinaga.trademanager.BuildConfig
@@ -23,7 +24,8 @@ class ApiCaller {
                 .addConverterFactory(
                         MoshiConverterFactory.create(
                                 Moshi.Builder()
-                                        .add(UriAdapter.FACTORY)
+                                        .add(AuthAdapter.FACTORY)
+                                        .add(KotlinJsonAdapterFactory())
                                         .build()
                         )
                 )

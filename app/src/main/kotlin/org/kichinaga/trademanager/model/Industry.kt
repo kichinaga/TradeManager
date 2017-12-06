@@ -1,7 +1,10 @@
 package org.kichinaga.trademanager.model
 
+import io.realm.RealmObject
+
 /**
  * Created by kichinaga on 2017/10/12.
  */
-data class Industry(val id: Int,
-                    val name: String)
+
+open class Industry(open var id: Int = 0,
+                    open var name: String = ""): RealmObject()
