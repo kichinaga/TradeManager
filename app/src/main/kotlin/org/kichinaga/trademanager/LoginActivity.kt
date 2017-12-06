@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_login.*
 import org.kichinaga.trademanager.api.ApiCaller
+import org.kichinaga.trademanager.api.adapter.AuthAdapter
 import org.kichinaga.trademanager.extensions.isLoggedIn
 import org.kichinaga.trademanager.extensions.setAccessToken
 import org.kichinaga.trademanager.extensions.setUserId
@@ -25,6 +26,7 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         showProgress(false)
+        title = getString(R.string.login)
 
         /* パスワード入力時のキーボードからの、Enter入力からでもログインできるように */
         login_password.setOnEditorActionListener({ _, actionId, _ ->
@@ -36,7 +38,7 @@ class LoginActivity: AppCompatActivity() {
         })
 
         login_button.setOnClickListener { attemptLogin() }
-        register_text.setOnClickListener { /* startActivity(Intent(this, RegisterActivity::class.java)) */ }
+        register_text.setOnClickListener { startActivity(Intent(this, SignUpActivity::class.java)) }
 
         //ログインデータが残っていれば、ログインをスキップする
         if (savedInstanceState == null && isLoggedIn(applicationContext)) loginComplete()
@@ -47,15 +49,13 @@ class LoginActivity: AppCompatActivity() {
      */
     private fun attemptLogin(){
         if (checkLoginData()){
-            //todo 非同期でサーバにリクエストを送る
             showProgress(true)
-            val caller = ApiCaller()
+            val caller = ApiCaller(AuthAdapter())
 
             caller.client.login(login_email.text.toString(), login_password.text.toString())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        //todo トークンを手に入れ、保存し、ユーザーデータをrealmに格納
                         val realm = Realm.getDefaultInstance()
                         val auth = it
                         setAccessToken(applicationContext, auth.token)
@@ -67,7 +67,6 @@ class LoginActivity: AppCompatActivity() {
 
                         realm.close()
                     },{
-                        //todo エラー処理
                         showProgress(false)
                         Snackbar.make(login_form, R.string.error_login, Snackbar.LENGTH_LONG).show()
                         it.printStackTrace()
@@ -75,8 +74,7 @@ class LoginActivity: AppCompatActivity() {
                         loginComplete()
                     })
         } else {
-            //todo エラー文を設定
-            login_email.error = getString(R.string.error_login_field)
+            login_email.error = getString(R.string.error_form_field)
         }
     }
 
@@ -99,7 +97,7 @@ class LoginActivity: AppCompatActivity() {
     /**
      * プログレスバーの表示、非表示を管理
      */
-    private fun showProgress(show: Boolean) {
+    private fun showProgress(show: Boolean = false) {
         login_progress.visibility = if (show) View.VISIBLE else View.GONE
     }
 }

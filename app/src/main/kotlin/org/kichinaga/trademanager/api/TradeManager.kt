@@ -1,10 +1,8 @@
 package org.kichinaga.trademanager.api
 
 import io.reactivex.Observable
-import org.kichinaga.trademanager.model.Auth
-import org.kichinaga.trademanager.model.Company
-import org.kichinaga.trademanager.model.Industry
-import org.kichinaga.trademanager.model.Market
+import io.reactivex.Single
+import org.kichinaga.trademanager.model.*
 import retrofit2.http.*
 
 /**
@@ -12,9 +10,17 @@ import retrofit2.http.*
  */
 interface TradeManager {
 
-    /* hoge */
     @POST("auth/login")
-    fun login(@Query("email") email: String, @Query("password") password: String): Observable<Auth>
+    fun login(@Query("email") email: String,
+              @Query("password") password: String
+    ): Observable<Auth>
+
+    @POST("auth/signup")
+    fun signup(@Query("name") name: String,
+               @Query("email") email: String,
+               @Query("password") password: String,
+               @Query("password_confirmation") password_confirmation: String
+    ): Single<SignUpResponse>
 
     /* /api/v1/companies */
     @GET("companies")

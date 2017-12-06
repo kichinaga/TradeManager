@@ -7,16 +7,6 @@
         android:orderInCategory="100"
         android:title="@string/companies"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/markets"
-        android:orderInCategory="110"
-        android:title="@string/markets"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/industries"
-        android:orderInCategory="120"
-        android:title="@string/industries"
-        app:showAsAction="never"/>
 
 
 </menu>
