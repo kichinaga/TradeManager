@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">TradeManager</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="companies">会社一覧</string>
     <string name="markets">市場一覧</string>
     <string name="industries">業種一覧</string>
