@@ -22,6 +22,8 @@ import org.kichinaga.trademanager.extensions.setUserId
  * Created by kichinaga on 2017/12/05.
  */
 class LoginActivity: AppCompatActivity() {
+    val realm = Realm.getDefaultInstance()!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -44,6 +46,11 @@ class LoginActivity: AppCompatActivity() {
         if (savedInstanceState == null && isLoggedIn(applicationContext)) loginComplete()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
+
     /**
      * ログイン検証部
      */
@@ -55,23 +62,19 @@ class LoginActivity: AppCompatActivity() {
             caller.client.login(login_email.text.toString(), login_password.text.toString())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        val realm = Realm.getDefaultInstance()
-                        val auth = it
+                    .subscribe({ auth ->
                         setAccessToken(applicationContext, auth.token)
-                        setUserId(applicationContext, auth.current_user?.id!!)
+                        setUserId(applicationContext, auth.current_user.id)
 
                         realm.executeTransaction {
                             realm.copyToRealmOrUpdate(auth.current_user)
                         }
 
-                        realm.close()
+                        loginComplete()
                     },{
                         showProgress(false)
                         Snackbar.make(login_form, R.string.error_login, Snackbar.LENGTH_LONG).show()
                         it.printStackTrace()
-                    },{
-                        loginComplete()
                     })
         } else {
             login_email.error = getString(R.string.error_form_field)
