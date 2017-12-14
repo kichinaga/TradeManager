@@ -1,5 +1,6 @@
 package org.kichinaga.trademanager.api.adapter
 
+import android.annotation.SuppressLint
 import com.squareup.moshi.JsonReader
 import io.realm.RealmList
 import org.kichinaga.trademanager.model.*
@@ -32,7 +33,6 @@ interface BaseConvertAdapter {
         var id = 0
         var name = ""
         var email = ""
-        val stockLists: RealmList<StockList> = RealmList()
 
         reader.beginObject()
         while (reader.hasNext()){
@@ -40,26 +40,19 @@ interface BaseConvertAdapter {
                 "id" -> id = reader.nextInt()
                 "name" -> name = reader.nextString()
                 "email" -> email = reader.nextString()
-                "stock_lists" -> {
-                    reader.beginArray()
-                    while (reader.hasNext()){
-                        stockLists.add(readStockLists(reader))
-                    }
-                    reader.endArray()
-                }
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
 
-        return User(id, name, email, stockLists)
+        return User(id, name, email)
     }
 
     fun readStockLists(reader: JsonReader): StockList {
         var id = 0
         var activated = false
+        var stock_code = 0
         var company = Company()
-        val stocks: RealmList<Stock> = RealmList()
         var stock_total = StockTotal()
 
         reader.beginObject()
@@ -67,29 +60,24 @@ interface BaseConvertAdapter {
             when(reader.nextName()){
                 "id" -> id = reader.nextInt()
                 "activated" -> activated = reader.nextBoolean()
+                "stock_code" -> stock_code = reader.nextInt()
                 "company" -> company = readCompany(reader)
-                "stocks" -> {
-                    reader.beginArray()
-                    while (reader.hasNext()){
-                        stocks.add(readStocks(reader))
-                    }
-                    reader.endArray()
-                }
                 "stock_total" -> stock_total = readStockTotal(reader)
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
 
-        return StockList(id, activated, company, stocks, stock_total)
+        return StockList(id, activated, stock_code, company, stock_total)
     }
 
     fun readCompany(reader: JsonReader): Company {
         var id = 0
         var stock_code = 0
         var name = ""
-        var market = Market()
-        var industry = Industry()
+        var market = 0
+        var industry = 0
+        var stock_detail = StockDetail()
 
         reader.beginObject()
         while (reader.hasNext()){
@@ -97,48 +85,38 @@ interface BaseConvertAdapter {
                 "id" -> id = reader.nextInt()
                 "stock_code" -> stock_code = reader.nextInt()
                 "name" -> name = reader.nextString()
-                "market" -> market = readMarket(reader)
-                "industry" -> industry = readIndustry(reader)
+                "market_id" -> market = reader.nextInt()
+                "industry_id" -> industry = reader.nextInt()
+                "stock_detail" -> stock_detail = readStockDetail(reader)
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
 
-        return Company(id, stock_code, name, market, industry)
+        return Company(id, stock_code, name, market, industry, stock_detail)
     }
 
-    fun readMarket(reader: JsonReader): Market {
+    fun readSearchCompany(reader: JsonReader): Company {
         var id = 0
+        var stock_code = 0
         var name = ""
+        var market = 0
+        var industry = 0
 
         reader.beginObject()
         while (reader.hasNext()){
             when(reader.nextName()){
                 "id" -> id = reader.nextInt()
+                "stock_code" -> stock_code = reader.nextInt()
                 "name" -> name = reader.nextString()
+                "market_id" -> market = reader.nextInt()
+                "industry_id" -> industry = reader.nextInt()
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
 
-        return Market(id, name)
-    }
-
-    fun readIndustry(reader: JsonReader): Industry {
-        var id = 0
-        var name = ""
-
-        reader.beginObject()
-        while (reader.hasNext()){
-            when(reader.nextName()){
-                "id" -> id = reader.nextInt()
-                "name" -> name = reader.nextString()
-                else -> reader.skipValue()
-            }
-        }
-        reader.endObject()
-
-        return Industry(id, name)
+        return Company(id, stock_code, name, market, industry, StockDetail())
     }
 
     fun readStocks(reader: JsonReader): Stock {
@@ -146,6 +124,7 @@ interface BaseConvertAdapter {
         var num = 0
         var action = ""
         var created_at = Date()
+        val pattern = "yyyy-MM-dd"
 
         reader.beginObject()
         while (reader.hasNext()){
@@ -153,7 +132,7 @@ interface BaseConvertAdapter {
                 "price" -> price = reader.nextInt()
                 "num" -> num = reader.nextInt()
                 "action" -> action = reader.nextString()
-                "created_at" -> created_at = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.JAPAN).parse(reader.nextString())
+                "created_at" -> created_at = SimpleDateFormat(pattern, Locale.JAPAN).parse(reader.nextString())
                 else -> reader.skipValue()
             }
         }
@@ -162,22 +141,58 @@ interface BaseConvertAdapter {
         return Stock(price,num, action, created_at)
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun readStockTotal(reader: JsonReader): StockTotal {
+        var id = 0
         var price = 0
         var amount = 0
         var updated_at = Date()
+        // val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        val pattern = "yyyy-MM-dd"
 
         reader.beginObject()
         while (reader.hasNext()){
             when(reader.nextName()){
+                "id" -> id = reader.nextInt()
                 "price" -> price = reader.nextInt()
                 "amount" -> amount = reader.nextInt()
-                "updated_at" -> updated_at = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.JAPAN).parse(reader.nextString())
+                "updated_at" -> updated_at = SimpleDateFormat(pattern, Locale.JAPAN).parse(reader.nextString())
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
 
-        return StockTotal(price, amount, updated_at)
+        return StockTotal(id, price, amount, updated_at)
+    }
+
+    fun readStockDetail(reader: JsonReader): StockDetail{
+        var id = 0
+        var price = ""
+        var change = ""
+        var prev = ""
+        var open = ""
+        var high = ""
+        var low = ""
+        var vol = ""
+        var trade = ""
+
+        reader.beginObject()
+        while (reader.hasNext()){
+            when(reader.nextName()){
+                "id" -> id = reader.nextInt()
+                "price" -> price = reader.nextString()
+                "change" -> change = reader.nextString()
+                "prev_close_price" -> prev = reader.nextString()
+                "open_price" -> open = reader.nextString()
+                "high_price" -> high = reader.nextString()
+                "low_price" -> low = reader.nextString()
+                "volume" -> vol = reader.nextString()
+                "total_trade" -> trade = reader.nextString()
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+
+        return StockDetail(id, price, change, prev, open, high, low, vol, trade)
     }
 }

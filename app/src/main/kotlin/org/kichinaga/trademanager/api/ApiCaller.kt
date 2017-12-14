@@ -4,9 +4,7 @@ import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import org.kichinaga.trademanager.BuildConfig
-import org.kichinaga.trademanager.api.adapter.AuthAdapter
-import org.kichinaga.trademanager.api.adapter.BaseConvertAdapter
-import org.kichinaga.trademanager.api.adapter.CompanyAdapter
+import org.kichinaga.trademanager.api.adapter.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -24,7 +22,8 @@ class ApiCaller<T: BaseConvertAdapter>(adapter: T) {
                         .baseUrl("http://${BuildConfig.OBJECT_SERVER_IP}:3000/api/v1/")
                         .build().create(TradeManager::class.java)
     }
-    private val BASE_URL: String = "http://${BuildConfig.OBJECT_SERVER_IP}:3000/api/v1/"
+    // private val BASE_URL: String = "http://${BuildConfig.OBJECT_SERVER_IP}:3000/api/v1/"
+    private val BASE_URL: String = "http://10.0.2.2:3000/api/v1/"
 
     val client: TradeManager = getApiClient(adapter)
 
@@ -33,7 +32,10 @@ class ApiCaller<T: BaseConvertAdapter>(adapter: T) {
         var builder: Retrofit? = null
         when(adapter){
             is AuthAdapter -> builder =  getRetrofitBuilder(adapter)
+            is StockListAdapter -> builder = getRetrofitBuilder(adapter)
             is CompanyAdapter -> builder = getRetrofitBuilder(adapter)
+            is CompanySearchAdapter -> builder = getRetrofitBuilder(adapter)
+            is CreateStockListAdapter -> builder = getRetrofitBuilder(adapter)
         }
 
         return builder?.create(TradeManager::class.java)!!
