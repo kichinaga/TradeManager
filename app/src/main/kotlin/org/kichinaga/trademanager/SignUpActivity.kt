@@ -21,7 +21,7 @@ class SignUpActivity: AppCompatActivity() {
         setContentView(R.layout.activity_signup)
         showProgress(false)
 
-        signup_password_confirmation.setOnEditorActionListener { v, actionId, event ->
+        signup_password_confirmation.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == R.id.sign_up || actionId == EditorInfo.IME_NULL){
                 attemptSignUp()
                 return@setOnEditorActionListener true
