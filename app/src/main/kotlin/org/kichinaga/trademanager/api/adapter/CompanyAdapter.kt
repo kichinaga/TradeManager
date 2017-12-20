@@ -11,6 +11,7 @@ class CompanyAdapter : JsonAdapter<Company>(), BaseConvertAdapter {
     @FromJson
     override fun fromJson(reader: JsonReader?): Company? {
         reader ?: throw JsonDataException("json parse error")
+
         return readCompany(reader)
     }
 

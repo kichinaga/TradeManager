@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="株">
+        <menu>
+            <item
+                android:id="@+id/company_search"
+                android:title="企業検索" />
+        </menu>
+    </item>
+
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/logout"
+            android:title="ログアウト" />
+        <item
+            android:id="@+id/settings"
+            android:title="設定" />
+    </group>
+</menu>

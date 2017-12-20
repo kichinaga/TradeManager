@@ -22,15 +22,17 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".SignUpActivity"
+                  android:label="@string/signup"/>
+
         <activity android:name=".MainActivity"
                   android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".CompaniesActivity"
                   android:label="企業一覧"
                   android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".SignUpActivity"
-            android:label="@string/signup"/>
+        <activity android:name=".StockActivity" />
+        <activity android:name=".TradeDetailActivity"/>
     </application>
 
 </manifest>
