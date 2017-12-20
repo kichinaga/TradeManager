@@ -32,23 +32,26 @@ class StockListFragment: Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showProgress(true)
         service.get(activity)
                 .subscribe { realmlist ->
                     realm.executeTransaction { it.copyToRealmOrUpdate(realmlist) }
                     val list = getShapingList(realmlist)
                     adapter = StockListAdapter(activity, list)
-                    Handler(activity.mainLooper).post { lists_view.adapter = adapter }
+                    Handler(activity.mainLooper).post {
+                        lists_view.adapter = adapter
+                        showProgress(false)
+                    }
                 }
 
         lists_view.setOnScrollListener(object : AbsListView.OnScrollListener{
+            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {}
             override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                 val list = realm.where(StockList::class.java).findAllSorted("stock_code", Sort.ASCENDING)
                 if (totalItemCount > 0 && totalItemCount == (firstVisibleItem + visibleItemCount) && list.size > totalItemCount + listLimit){
                     Handler(activity.mainLooper).post { adapter?.addItem(getShapingList(list, totalItemCount, totalItemCount + listLimit)) }
                 }
             }
-
-            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {}
         })
 
     }
@@ -56,5 +59,9 @@ class StockListFragment: Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         realm.close()
+    }
+
+    private fun showProgress(show: Boolean = false) {
+        list_progress.visibility = if (show) View.VISIBLE else View.GONE
     }
 }

@@ -44,7 +44,6 @@ class CompanyAdapter(val context: Context, val  list: MutableList<Company>): Rec
                 if (realm.where(StockList::class.java).equalTo("stock_code", item.stock_code).findFirst() != null) {
                     context.showToast("すでに登録済です。")
                 } else {
-                    //todo ユーザーのStockListに追加する
                     val caller = ApiCaller(CreateStockListAdapter())
                     caller.client.addStockLists(getAccessToken(context), item.id)
                             .subscribeOn(Schedulers.newThread())

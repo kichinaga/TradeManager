@@ -31,11 +31,13 @@ class ApiCaller<T: BaseConvertAdapter>(adapter: T) {
     private fun <T> getApiClient(adapter: T): TradeManager {
         var builder: Retrofit? = null
         when(adapter){
-            is AuthAdapter -> builder =  getRetrofitBuilder(adapter)
-            is StockListAdapter -> builder = getRetrofitBuilder(adapter)
-            is CompanyAdapter -> builder = getRetrofitBuilder(adapter)
-            is CompanySearchAdapter -> builder = getRetrofitBuilder(adapter)
-            is CreateStockListAdapter -> builder = getRetrofitBuilder(adapter)
+            is AuthAdapter,
+            is StockListAdapter,
+            is CompanyAdapter,
+            is CompanySearchAdapter,
+            is CreateStockListAdapter,
+            is StockAdapter
+            -> builder =  getRetrofitBuilder(adapter)
         }
 
         return builder?.create(TradeManager::class.java)!!

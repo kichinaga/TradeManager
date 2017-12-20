@@ -31,6 +31,8 @@
         <activity android:name=".CompaniesActivity"
                   android:label="企業一覧"
                   android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".StockActivity" />
+        <activity android:name=".TradeDetailActivity"/>
     </application>
 
 </manifest>

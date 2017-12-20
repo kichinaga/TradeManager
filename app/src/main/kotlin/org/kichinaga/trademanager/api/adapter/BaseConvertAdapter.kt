@@ -2,7 +2,6 @@ package org.kichinaga.trademanager.api.adapter
 
 import android.annotation.SuppressLint
 import com.squareup.moshi.JsonReader
-import io.realm.RealmList
 import org.kichinaga.trademanager.model.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -120,15 +119,20 @@ interface BaseConvertAdapter {
     }
 
     fun readStocks(reader: JsonReader): Stock {
+        var id = 0
+        var code = 0
         var price = 0
         var num = 0
         var action = ""
         var created_at = Date()
-        val pattern = "yyyy-MM-dd"
+        val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        // val pattern = "yyyy-MM-dd"
 
         reader.beginObject()
         while (reader.hasNext()){
             when(reader.nextName()){
+                "id" -> id = reader.nextInt()
+                "stock_code" -> code = reader.nextInt()
                 "price" -> price = reader.nextInt()
                 "num" -> num = reader.nextInt()
                 "action" -> action = reader.nextString()
@@ -138,7 +142,7 @@ interface BaseConvertAdapter {
         }
         reader.endObject()
 
-        return Stock(price,num, action, created_at)
+        return Stock(id, code, price,num, action, created_at)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -147,8 +151,8 @@ interface BaseConvertAdapter {
         var price = 0
         var amount = 0
         var updated_at = Date()
-        // val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        val pattern = "yyyy-MM-dd"
+        val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        // val pattern = "yyyy-MM-dd"
 
         reader.beginObject()
         while (reader.hasNext()){

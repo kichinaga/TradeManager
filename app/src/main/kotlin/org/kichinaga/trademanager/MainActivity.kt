@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import org.kichinaga.trademanager.extensions.PrefKeys
 import org.kichinaga.trademanager.extensions.setAccessToken
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.logout -> {
                     setAccessToken(this, PrefKeys.ERROR_TOKEN.name)
                     setUserId(this, -1)
+                    val realm = Realm.getDefaultInstance()
+                    realm.deleteAll()
                     finishAndRemoveTask()
                     startActivity(Intent(this, LoginActivity::class.java))
                 }
@@ -68,6 +71,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         replaceFragment(StockListFragment())
     }
+
+    
 
     @SuppressLint("CommitTransaction")
     private fun replaceFragment(item: Fragment){
